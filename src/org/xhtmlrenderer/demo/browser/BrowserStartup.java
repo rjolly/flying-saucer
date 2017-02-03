@@ -21,6 +21,10 @@ public class BrowserStartup extends Frame {
 	final String startPage = "demo:demos/splash/splash.html";
 	final ValidationHandler error_handler = new ValidationHandler();
 
+	static {
+		System.setProperty("xr.css.user-agent-default-css", "/org/xhtmlrenderer/demo/browser/");
+	}
+
 	public BrowserStartup() {
 		this(null);
 	}

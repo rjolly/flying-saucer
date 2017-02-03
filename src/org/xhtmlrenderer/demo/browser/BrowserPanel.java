@@ -27,7 +27,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class BrowserPanel extends JPanel implements DocumentListener {
-	private static final long serialVersionUID = 1L;
+	private final ChainedReplacedElementFactory cef = new ChainedReplacedElementFactory();
 
 	JButton forward;
 	JButton backward;
@@ -87,7 +87,10 @@ public class BrowserPanel extends JPanel implements DocumentListener {
 		ImageResourceLoader irl = new ImageResourceLoader();
 		irl.setRepaintListener(view);
 		manager.setImageResourceLoader(irl);
-		view.getSharedContext().setReplacedElementFactory(new SwingReplacedElementFactory(view, irl));
+		cef.addFactory(new SwingReplacedElementFactory(view, irl));
+		cef.addFactory(new JEuclidReplacedElementFactory());
+		cef.addFactory(new SVGBatikReplacedElementFactory());
+		view.getSharedContext().setReplacedElementFactory(cef);
 		view.addDocumentListener(manager);
 		view.setCenteredPagedView(true);
 		view.setBackground(Color.LIGHT_GRAY);
