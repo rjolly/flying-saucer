@@ -95,6 +95,8 @@ public class BrowserPanel extends JPanel implements DocumentListener {
 		view.setCenteredPagedView(true);
 		view.setBackground(Color.LIGHT_GRAY);
 		scroll = new FSScrollPane(view);
+		scroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
 		print_preview = new JButton();
 		print = new JButton();
 
