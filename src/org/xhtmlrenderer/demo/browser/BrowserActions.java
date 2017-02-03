@@ -86,7 +86,7 @@ public class BrowserActions {
 		quit =
 				new AbstractAction() {
 					public void actionPerformed(ActionEvent evt) {
-						System.exit(0);
+						root.doDefaultCloseAction();
 					}
 				};
 

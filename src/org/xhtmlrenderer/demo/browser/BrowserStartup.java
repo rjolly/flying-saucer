@@ -1,39 +1,46 @@
 package org.xhtmlrenderer.demo.browser;
 
-import java.awt.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.swing.*;
+import java.awt.BorderLayout;
+import java.net.URI;
+import java.net.URISyntaxException;
+import javax.swing.ImageIcon;
+import javax.swing.JFrame;
 import javax.swing.border.EtchedBorder;
 
 import org.xhtmlrenderer.util.GeneralUtil;
 import org.xhtmlrenderer.util.XRLog;
 
-public class BrowserStartup {
-	public BrowserPanel panel;
-	protected BrowserMenuBar menu;
-	protected JFrame frame;
-	protected JFrame validation_console = null;
-	protected BrowserActions actions;
-	protected String startPage;
+import linoleum.application.Frame;
 
-	protected ValidationHandler error_handler = new ValidationHandler();
-	public static final Logger logger = Logger.getLogger("app.browser");
+public class BrowserStartup extends Frame {
+	public BrowserPanel panel;
+	BrowserMenuBar menu;
+	final JFrame frame = null;
+	JFrame validation_console = null;
+	BrowserActions actions;
+	final String startPage = "demo:demos/splash/splash.html";
+	final ValidationHandler error_handler = new ValidationHandler();
 
 	public BrowserStartup() {
-		this("demo:demos/splash/splash.html");
+		this(null);
 	}
 
-	public BrowserStartup(String startPage) {
-		logger.info("starting up");
-		this.startPage = startPage;
+	public BrowserStartup(final Frame parent) {
+		super(parent);
+		initUI();
+		setIcon(new ImageIcon(getClass().getResource("flyingsaucer24.png")));
+		setMimeType("text/html:application/xhtml+xml");
+		panel.loadPage(startPage);
 	}
 
-	public void initUI() {
-		JFrame frame = new JFrame();
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		this.frame = frame;
-		logger.info("creating UI");
+	private void initUI() {
+                setClosable(true);
+                setIconifiable(true);
+                setMaximizable(true);
+                setResizable(true);
+
+		setName("FlyingSaucer");
+
 		actions = new BrowserActions(this);
 		actions.init();
 
@@ -46,39 +53,40 @@ public class BrowserStartup {
 		menu.createLayout();
 		menu.createActions();
 
-		frame.setJMenuBar(menu);
+		setJMenuBar(menu);
 
-		frame.getContentPane().add(panel.toolbar, BorderLayout.PAGE_START);
-		frame.getContentPane().add(panel, BorderLayout.CENTER);
+		getContentPane().add(panel.toolbar, BorderLayout.PAGE_START);
+		getContentPane().add(panel, BorderLayout.CENTER);
 		panel.setBorder(new EtchedBorder(EtchedBorder.LOWERED));
-		frame.getContentPane().add(panel.status, BorderLayout.PAGE_END);
-		frame.pack();
-		frame.setSize(1024, 768);
+		getContentPane().add(panel.status, BorderLayout.PAGE_END);
+		pack();
+		setSize(1024, 768);
 	}
 
-	public static void main(final String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				final BrowserStartup bs = new BrowserStartup();
-				bs.initUI();
-				bs.launch();
-			}
-		});
+	@Override
+	public Frame getFrame(final Frame parent) {
+		return new BrowserStartup(parent);
 	}
 
-	public void launch() {
-		try {
-			panel.loadPage(startPage);
+	@Override
+	public void setURI(final URI uri) {
+		panel.loadPage(uri.toString());
+	}
 
-			frame.setVisible(true);
-		} catch (Exception ex) {
-			XRLog.general(Level.SEVERE, ex.getMessage(), ex);
+	@Override
+	public URI getURI() {
+		final String str = panel.view.getSharedContext().getBaseURL();
+		if (str != null) try {
+			return new URI(str);
+		} catch (final URISyntaxException ex) {
+			ex.printStackTrace();
 		}
+		return null;
 	}
 
 	class FrameBrowserPanelListener implements BrowserPanelListener {
-		public void pageLoadSuccess(String url, String title) {
-			frame.setTitle(title + (title.length() > 0 ? " - " : "") + "Flying Saucer");
+		public void pageLoadSuccess(final String url, final String title) {
+			setTitle(title + (title.length() > 0 ? " - " : "") + "Flying Saucer");
 		}
 	}
 }
