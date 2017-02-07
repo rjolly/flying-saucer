@@ -7,9 +7,6 @@ import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.border.EtchedBorder;
 
-import org.xhtmlrenderer.util.GeneralUtil;
-import org.xhtmlrenderer.util.XRLog;
-
 import linoleum.application.Frame;
 
 public class BrowserStartup extends Frame {
@@ -34,7 +31,6 @@ public class BrowserStartup extends Frame {
 		initUI();
 		setIcon(new ImageIcon(getClass().getResource("flyingsaucer24.png")));
 		setMimeType("text/html:application/xhtml+xml");
-		panel.loadPage(startPage);
 	}
 
 	private void initUI() {
@@ -86,6 +82,14 @@ public class BrowserStartup extends Frame {
 			ex.printStackTrace();
 		}
 		return null;
+	}
+
+	@Override
+	public void open() {
+		final String str = panel.view.getSharedContext().getBaseURL();
+		if (str == null) {
+			panel.loadPage(startPage);
+		}
 	}
 
 	class FrameBrowserPanelListener implements BrowserPanelListener {

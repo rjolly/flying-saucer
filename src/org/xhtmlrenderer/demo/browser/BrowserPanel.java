@@ -3,6 +3,9 @@ package org.xhtmlrenderer.demo.browser;
 import org.w3c.dom.Document;
 import org.xhtmlrenderer.event.DocumentListener;
 import org.xhtmlrenderer.layout.SharedContext;
+import org.xhtmlrenderer.pdf.ITextRenderer;
+import org.xhtmlrenderer.pdf.PDFCreationListener;
+import org.xhtmlrenderer.pdf.util.XHtmlMetaToPdfInfoAdapter;
 import org.xhtmlrenderer.resource.XMLResource;
 import org.xhtmlrenderer.simple.FSScrollPane;
 import org.xhtmlrenderer.swing.ImageResourceLoader;
@@ -47,7 +50,7 @@ public class BrowserPanel extends JPanel implements DocumentListener {
 
 	JButton print_preview;
 
-	public static final Logger logger = Logger.getLogger("app.browser");
+	public final Logger logger = Logger.getLogger("app.browser");
 
 	private PanelManager manager;
 	JButton goToPage;
@@ -271,8 +274,42 @@ public class BrowserPanel extends JPanel implements DocumentListener {
 		}
 	}
 	
-	public void exportToPdf( String path )
-	{
+	public void exportToPdf( String path ) {
+		if (manager.getBaseURL() != null) {
+			setStatus( "Exporting to " + path + "..." );
+			OutputStream os = null;
+			try {
+				os = new FileOutputStream(path);
+				try {
+				ITextRenderer renderer = new ITextRenderer();
+
+				DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+				DocumentBuilder db = dbf.newDocumentBuilder();
+				Document doc =  db.parse(manager.getBaseURL());
+
+				PDFCreationListener pdfCreationListener = new XHtmlMetaToPdfInfoAdapter( doc );
+				renderer.setListener( pdfCreationListener );
+							  
+				renderer.setDocument(manager.getBaseURL());
+				renderer.layout();
+
+				renderer.createPDF(os);
+				setStatus( "Done export." );
+			} catch (Exception e) {
+				XRLog.general(Level.SEVERE, "Could not export PDF.", e);
+				e.printStackTrace();
+				setStatus( "Error exporting to PDF." );
+				} finally {
+					try {
+						os.close();
+					} catch (IOException e) {
+						// swallow
+					}
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 	}
 
 	private void handlePageLoadFailed(String url_text, XRRuntimeException ex) {
@@ -299,7 +336,7 @@ public class BrowserPanel extends JPanel implements DocumentListener {
 				root.panel.view.setDocument(xr.getDocument(), null);
 			}
 		});
-   }
+	}
 
 	private String addLineBreaks(String _text, int maxLineLength) {
 		StringBuffer broken = new StringBuffer(_text.length() + 10);
