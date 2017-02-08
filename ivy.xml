@@ -16,5 +16,6 @@
         <dependency org="net.sourceforge.jeuclid" name="jeuclid-core" rev="3.1.9" conf="compile->master;runtime->default"/>
         <dependency org="org.apache.xmlgraphics" name="batik-transcoder" rev="1.7" conf="compile->master;runtime->default"/>
         <dependency org="org.apache.xmlgraphics" name="batik-codec" rev="1.7" conf="compile->master;runtime->default"/>
+        <dependency org="xalan" name="xalan" rev="2.7.2" conf="compile->master;runtime->default"/>
     </dependencies>
 </ivy-module>
