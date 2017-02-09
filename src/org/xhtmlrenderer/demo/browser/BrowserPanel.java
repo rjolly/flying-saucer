@@ -1,14 +1,19 @@
 package org.xhtmlrenderer.demo.browser;
 
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 import org.xhtmlrenderer.event.DocumentListener;
 import org.xhtmlrenderer.layout.SharedContext;
 import org.xhtmlrenderer.pdf.ITextRenderer;
 import org.xhtmlrenderer.pdf.PDFCreationListener;
 import org.xhtmlrenderer.pdf.util.XHtmlMetaToPdfInfoAdapter;
+import org.xhtmlrenderer.render.Box;
 import org.xhtmlrenderer.resource.XMLResource;
 import org.xhtmlrenderer.simple.FSScrollPane;
+import org.xhtmlrenderer.swing.BasicPanel;
 import org.xhtmlrenderer.swing.ImageResourceLoader;
+import org.xhtmlrenderer.swing.LinkListener;
 import org.xhtmlrenderer.swing.ScalableXHTMLPanel;
 import org.xhtmlrenderer.swing.SwingReplacedElementFactory;
 import org.xhtmlrenderer.util.GeneralUtil;
@@ -20,6 +25,9 @@ import javax.swing.*;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.awt.*;
+import java.awt.datatransfer.StringSelection;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.io.FileOutputStream;
@@ -31,29 +39,27 @@ import java.util.logging.Logger;
 
 public class BrowserPanel extends JPanel implements DocumentListener {
 	private final ChainedReplacedElementFactory cef = new ChainedReplacedElementFactory();
-
-	JButton forward;
-	JButton backward;
-	JButton stop;
-	JButton reload;
-	JButton goHome;
-	JButton font_inc;
-	JButton font_rst;
-	JButton font_dec;
-	JButton print;
+	private String uri;
+	private JButton forward;
+	private JButton backward;
+	private JButton stop;
+	private JButton reload;
+	private JButton goHome;
+	private JButton font_inc;
+	private JButton font_rst;
+	private JButton font_dec;
+	private JButton print;
 	JTextField url;
 	BrowserStatus status;
 	public ScalableXHTMLPanel view;
-	JScrollPane scroll;
-	BrowserStartup root;
-	BrowserPanelListener listener;
-
-	JButton print_preview;
-
-	public final Logger logger = Logger.getLogger("app.browser");
-
+	private JScrollPane scroll;
+	private BrowserStartup root;
+	private BrowserPanelListener listener;
+	private JPopupMenu popup;
+	private JButton print_preview;
+	private final Logger logger = Logger.getLogger("app.browser");
 	private PanelManager manager;
-	JButton goToPage;
+	private JButton goToPage;
 	public JToolBar toolbar;
 
 	public BrowserPanel(BrowserStartup root, BrowserPanelListener listener) {
@@ -83,7 +89,6 @@ public class BrowserPanel extends JPanel implements DocumentListener {
 			}
 		});
 
-
 		manager = new PanelManager();
 		view = new ScalableXHTMLPanel(manager);
 		manager.setRepaintListener(view);
@@ -94,6 +99,29 @@ public class BrowserPanel extends JPanel implements DocumentListener {
 		cef.addFactory(new JEuclidReplacedElementFactory());
 		cef.addFactory(new SVGBatikReplacedElementFactory());
 		view.getSharedContext().setReplacedElementFactory(cef);
+		view.addMouseTrackingListener(new LinkListener() {
+			@Override
+			public void linkClicked(final BasicPanel panel, final String uri) {
+				onMouseOut(panel, null);
+			}
+
+			@Override
+			public void onMouseOver(final BasicPanel panel, final Box box) {
+				uri = findLink(panel, box.getElement());
+				if (uri != null) {
+					setStatus(uri);
+					panel.setComponentPopupMenu(popup);
+				}
+			}
+
+			@Override
+			public void onMouseOut(final BasicPanel panel, final Box box) {
+				if (uri != null) {
+					panel.setComponentPopupMenu(null);
+					setStatus("");
+				}
+			}
+		});
 		view.addDocumentListener(manager);
 		view.setCenteredPagedView(true);
 		view.setBackground(Color.LIGHT_GRAY);
@@ -108,6 +136,7 @@ public class BrowserPanel extends JPanel implements DocumentListener {
 		status = new BrowserStatus();
 		status.init();
 
+		initPopup();
 		initToolbar();
 
 		int text_width = 200;
@@ -115,6 +144,30 @@ public class BrowserPanel extends JPanel implements DocumentListener {
 
 		setLayout(new BorderLayout());
 		this.add(scroll, BorderLayout.CENTER);
+	}
+
+	private String findLink(final BasicPanel panel, final Element e) {
+		String uri = null;
+		for (Node node = e; node.getNodeType() == Node.ELEMENT_NODE; node = node.getParentNode()) {
+			uri = panel.getSharedContext().getNamespaceHandler().getLinkUri((Element) node);
+			if (uri != null) {
+				break;
+			}
+		}
+		return uri;
+	}
+
+	private void initPopup() {
+		popup = new JPopupMenu();
+		final JMenuItem item = new JMenuItem();
+		item.setText("Copy link location");
+		item.addActionListener(new ActionListener() {
+			public void actionPerformed(final ActionEvent evt) {
+				final StringSelection selection = new StringSelection(uri);
+				getToolkit().getSystemClipboard().setContents(selection, selection);
+			}
+		});
+		popup.add(item);
 	}
 
 	private void initToolbar() {

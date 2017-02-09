@@ -234,14 +234,6 @@ public class BrowserMenuBar extends JMenuBar {
 
 	public void createActions() {
 		if (Configuration.isTrue("xr.use.listeners", true)) {
-			List l = root.panel.view.getMouseTrackingListeners();
-			for (Iterator i = l.iterator(); i.hasNext(); ) {
-				FSMouseListener listener = (FSMouseListener)i.next();
-				if ( listener instanceof LinkListener ) {
-					root.panel.view.removeMouseTrackingListener(listener);
-				}
-			}
-
 			root.panel.view.addMouseTrackingListener(new LinkListener() {
 			   public void linkClicked(BasicPanel panel, String uri) {
 				   if (uri.startsWith("demoNav")) {
