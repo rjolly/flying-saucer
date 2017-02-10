@@ -2,7 +2,8 @@ package org.xhtmlrenderer.demo.browser;
 
 import java.awt.BorderLayout;
 import java.awt.Insets;
-
+import java.util.Timer;
+import java.util.TimerTask;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
@@ -34,29 +35,23 @@ public class BrowserStatus extends JPanel {
 	}
 
 	public void createEvents() {
-		new Thread(new Runnable() {
+		(new Timer()).schedule(new TimerTask() {
+			@Override
 			public void run() {
-				while (true) {
-					try {
-						Runtime rt = Runtime.getRuntime();
-						long used = rt.totalMemory() - rt.freeMemory();
-						long total = rt.totalMemory();
+				final Runtime rt = Runtime.getRuntime();
+				long used = rt.totalMemory() - rt.freeMemory();
+				long total = rt.totalMemory();
 
-						used = used / (1024 * 1024);
-						total = total / (1024 * 1024);
+				used = used / (1024 * 1024);
+				total = total / (1024 * 1024);
 
-						final String text = used + "M / " + total + "M";
-						SwingUtilities.invokeLater(new Runnable() {
-							public void run() {
-								memory.setText(text);
-							}
-						});
-						Thread.sleep(5000);
-					} catch (InterruptedException e) {
-						break;
+				final String text = used + "M / " + total + "M";
+				SwingUtilities.invokeLater(new Runnable() {
+					public void run() {
+						memory.setText(text);
 					}
-				}
+				});
 			}
-		}).start();
+		}, 0, 5000);
 	}
 }
