@@ -2,7 +2,6 @@ package org.xhtmlrenderer.demo.browser;
 
 import org.xhtmlrenderer.demo.browser.actions.ZoomAction;
 import org.xhtmlrenderer.swing.*;
-import org.xhtmlrenderer.util.Configuration;
 import org.xhtmlrenderer.util.Uu;
 
 import javax.swing.*;
@@ -230,25 +229,6 @@ public class BrowserMenuBar extends JMenuBar {
 		group.add(item);
 		menu.add(item);
 		return item;
-	}
-
-	public void createActions() {
-		if (Configuration.isTrue("xr.use.listeners", true)) {
-			root.panel.view.addMouseTrackingListener(new LinkListener() {
-			   public void linkClicked(BasicPanel panel, String uri) {
-				   if (uri.startsWith("demoNav")) {
-					   String pg = uri.split(":")[1];
-					   if (pg.equals("back")) {
-						   navigateToPriorDemo();
-					   } else {
-						   navigateToNextDemo();
-					   }
-				   } else {
-					   super.linkClicked(panel, uri);
-				   }
-			   } 
-			});
-		}
 	}
 
 	private ScaleFactor[] initializeScales() {

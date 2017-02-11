@@ -102,7 +102,19 @@ public class BrowserPanel extends JPanel implements DocumentListener {
 		view.addMouseTrackingListener(new LinkListener() {
 			@Override
 			public void linkClicked(final BasicPanel panel, final String uri) {
-				onMouseOut(panel, null);
+				if (!popup.isVisible()) {
+					onMouseOut(panel, null);
+					if (uri.startsWith("demoNav")) {
+						final String pg = uri.split(":")[1];
+						if (pg.equals("back")) {
+							root.menu.navigateToPriorDemo();
+						} else {
+							root.menu.navigateToNextDemo();
+						}
+					} else {
+						super.linkClicked(panel, uri);
+					}
+				}
 			}
 
 			@Override

@@ -20,6 +20,7 @@ public class BrowserStartup extends Frame {
 
 	static {
 		System.setProperty("xr.css.user-agent-default-css", "/org/xhtmlrenderer/demo/browser/");
+		System.setProperty("xr.use.listeners", "false");
 	}
 
 	public BrowserStartup() {
@@ -51,7 +52,6 @@ public class BrowserStartup extends Frame {
 		menu = new BrowserMenuBar(this);
 		menu.init();
 		menu.createLayout();
-		menu.createActions();
 
 		setJMenuBar(menu);
 
