@@ -249,42 +249,13 @@ public class BrowserActions {
 	}
 
 	private void showAboutDialog() {
-		final JDialog aboutDlg = new JDialog(root.frame);
-		aboutDlg.setSize(new Dimension(500, 450));
-
-		PanelManager uac = new PanelManager();
-		XHTMLPanel panel = new XHTMLPanel(uac);
+		final PanelManager uac = new PanelManager();
+		final XHTMLPanel panel = new XHTMLPanel(uac);
 		uac.setRepaintListener(panel);
 		panel.setOpaque(false);
-
 		panel.setDocument("demo:/demos/about.xhtml");
-
-		JPanel outer = new JPanel(new BorderLayout());
-		outer.add(panel, BorderLayout.CENTER);
-		final JButton btn = new JButton(new AbstractAction("OK") {
-			public void actionPerformed(ActionEvent e) {
-				aboutDlg.dispose();
-			}
-		});
-		SwingUtilities.invokeLater(new Runnable() {
-			public void run() {
-				btn.requestFocusInWindow();
-			}
-		});
-		JPanel control = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-		control.add(btn);
-		outer.add(control, BorderLayout.SOUTH);
-
-		aboutDlg.getContentPane().setLayout(new BorderLayout());
-		aboutDlg.getContentPane().add(outer, BorderLayout.CENTER);
-
-		aboutDlg.setTitle("About the Browser Demo");
-
-		int xx = (root.frame.getWidth() - aboutDlg.getWidth()) / 2;
-		int yy = (root.frame.getHeight() - aboutDlg.getHeight()) / 2;
-		aboutDlg.setLocation(xx, yy);
-		aboutDlg.setModal(true);
-		aboutDlg.setVisible(true);
+		panel.setPreferredSize(new Dimension(500, 400));
+		JOptionPane.showInternalMessageDialog(root, panel, "About the Browser Demo", JOptionPane.PLAIN_MESSAGE);
 	}
 
 	private void togglePrintPreview() {
