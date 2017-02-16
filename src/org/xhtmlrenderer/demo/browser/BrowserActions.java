@@ -17,20 +17,19 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.logging.Logger;
 
+import linoleum.application.FileChooser;
+
 public class BrowserActions {
 	public Action open_file, export_pdf , quit, print;
 	public Action forward, backward, refresh, reload, load, stop, print_preview, goHome;
-
 	public Action generate_diff, usersManual, aboutPage;
 	public BrowserStartup root;
-
 	public Action increase_font, decrease_font, reset_font;
-
 	public Action goToPage;
-
 	public static final Logger logger = Logger.getLogger("app.browser");
+	private final FileChooser chooser = new FileChooser();
 
-	public BrowserActions(BrowserStartup root) {
+	public BrowserActions(final BrowserStartup root) {
 		this.root = root;
 	}
 
@@ -48,28 +47,25 @@ public class BrowserActions {
 		//stop.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE));
 		stop.putValue(Action.MNEMONIC_KEY, new Integer(KeyEvent.VK_S));
 
-		open_file =
-				new AbstractAction() {
-					public void actionPerformed(ActionEvent evt) {
-						openAndShowFile();
-					}
-				};
+		open_file = new AbstractAction() {
+			public void actionPerformed(ActionEvent evt) {
+				openAndShowFile();
+			}
+		};
 		open_file.putValue(Action.NAME, "Open File...");
 		setAccel(open_file, KeyEvent.VK_O);
 		setMnemonic(open_file, new Integer(KeyEvent.VK_O));
 		
-		export_pdf =
-			new AbstractAction() {
-				public void actionPerformed(ActionEvent evt) {
-					exportToPdf();
-				}
-			};
+		export_pdf = new AbstractAction() {
+			public void actionPerformed(ActionEvent evt) {
+				exportToPdf();
+			}
+		};
 		export_pdf.putValue(Action.NAME, "Export PDF...");
-		//is iText in classpath ? 
-		try{
+		// is iText in classpath ? 
+		try {
 			Class.forName("com.lowagie.text.DocumentException");
-		} catch( ClassNotFoundException e )
-		{
+		} catch(final ClassNotFoundException e) {
 			export_pdf.setEnabled(false);
 		}
 		
@@ -83,12 +79,11 @@ public class BrowserActions {
 		setMnemonic(print, new Integer(KeyEvent.VK_P));
 		*/
 
-		quit =
-				new AbstractAction() {
-					public void actionPerformed(ActionEvent evt) {
-						root.doDefaultCloseAction();
-					}
-				};
+		quit = new AbstractAction() {
+			public void actionPerformed(ActionEvent evt) {
+				root.doDefaultCloseAction();
+			}
+		};
 
 		setName(quit, "Quit");
 		setAccel(quit, KeyEvent.VK_Q);
@@ -280,28 +275,26 @@ public class BrowserActions {
 	}
 
 	private void openAndShowFile() {
-		try {
-			FileDialog fd = new FileDialog(root.frame, "Open a local file", FileDialog.LOAD);
-			fd.show();
-			if (fd.getFile() != null) {
-				final String url = new File(fd.getDirectory(), fd.getFile()).toURI().toURL().toString();
+		switch (chooser.showInternalOpenDialog(root)) {
+		case JFileChooser.APPROVE_OPTION:
+			try {
+				final String url = chooser.getSelectedFile().toURI().toURL().toString();
 				root.panel.loadPage(url);
+			} catch (final MalformedURLException ex) {
+				logger.info("error:" + ex);
 			}
-		} catch (Exception ex) {
-			logger.info("error:" + ex);
+			break;
+		default:
 		}
 	}
 
 	private void exportToPdf() {
-		try {
-			FileDialog fd = new FileDialog(root.frame, "Save as PDF", FileDialog.SAVE);
-			fd.setVisible( true );
-			if (fd.getFile() != null) {
-				File outTarget = new File(fd.getDirectory(), fd.getFile());
-				root.panel.exportToPdf(outTarget.getAbsolutePath());
-			}
-		} catch (Exception ex) {
-			logger.info("error:" + ex);
+		switch (chooser.showInternalSaveDialog(root)) {
+		case JFileChooser.APPROVE_OPTION:
+			final File outTarget = chooser.getSelectedFile();
+			root.panel.exportToPdf(outTarget.getAbsolutePath());
+			break;
+		default:
 		}
 	}
 

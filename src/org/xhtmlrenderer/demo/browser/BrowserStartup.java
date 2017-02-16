@@ -4,7 +4,6 @@ import java.awt.BorderLayout;
 import java.net.URI;
 import java.net.URISyntaxException;
 import javax.swing.ImageIcon;
-import javax.swing.JFrame;
 import javax.swing.border.EtchedBorder;
 
 import linoleum.application.Frame;
@@ -12,11 +11,8 @@ import linoleum.application.Frame;
 public class BrowserStartup extends Frame {
 	public BrowserPanel panel;
 	BrowserMenuBar menu;
-	final JFrame frame = null;
-	JFrame validation_console = null;
 	BrowserActions actions;
 	final String startPage = "demo:demos/splash/splash.html";
-	final ValidationHandler error_handler = new ValidationHandler();
 
 	static {
 		System.setProperty("xr.css.user-agent-default-css", "/org/xhtmlrenderer/demo/browser/");

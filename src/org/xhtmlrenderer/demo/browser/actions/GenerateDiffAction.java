@@ -25,7 +25,7 @@ public class GenerateDiffAction extends AbstractAction {
 					String str = url.toString();
 					str = str.substring(6, str.length() - 6);
 					if (new File(str + ".diff").exists()) {
-						int n = JOptionPane.showConfirmDialog(root.panel.view,
+						int n = JOptionPane.showInternalConfirmDialog(root.panel,
 								"Diff already exists. Overwrite?",
 								"Warning",
 								JOptionPane.OK_CANCEL_OPTION);

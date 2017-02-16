@@ -1,13 +1,13 @@
 package org.xhtmlrenderer.demo.browser;
 
 import org.xhtmlrenderer.demo.browser.actions.ZoomAction;
-import org.xhtmlrenderer.swing.*;
 import org.xhtmlrenderer.util.Uu;
 
 import javax.swing.*;
+import javax.swing.event.InternalFrameAdapter;
+import javax.swing.event.InternalFrameEvent;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.io.*;
 import java.net.URL;
@@ -15,8 +15,7 @@ import java.util.*;
 import java.util.List;
 
 public class BrowserMenuBar extends JMenuBar {
-	BrowserStartup root;
-
+	private final BrowserStartup root;
 	JMenu file;
 	JMenu edit;
 	JMenu view;
@@ -25,7 +24,6 @@ public class BrowserMenuBar extends JMenuBar {
 	JMenu debug;
 	JMenu demos;
 	private String lastDemoOpened;
-
 	private Map allDemos;
 	private JMenu help;
 
@@ -68,8 +66,6 @@ public class BrowserMenuBar extends JMenuBar {
 	}
 
 	public void createLayout() {
-		final ScalableXHTMLPanel panel = root.panel.view;
-
 		file.add(root.actions.open_file);
 		file.add(new JSeparator());
 		file.add(root.actions.export_pdf);
@@ -80,7 +76,7 @@ public class BrowserMenuBar extends JMenuBar {
 		/*
 		// TODO: we can get the document and format it, but need syntax highlighting
 		// and a tab or separate window, dialog, etc.
-		view_source.setAction(new ViewSourceAction(panel));
+		view_source.setAction(new ViewSourceAction(root.panel.view));
 		view.add(view_source);
 		*/
 
@@ -90,7 +86,7 @@ public class BrowserMenuBar extends JMenuBar {
 		ButtonGroup zoomGroup = new ButtonGroup();
 		for (int i = 0; i < factors.length; i++) {
 			ScaleFactor factor = factors[i];
-			JRadioButtonMenuItem item = new JRadioButtonMenuItem(new ZoomAction(panel, factor));
+			JRadioButtonMenuItem item = new JRadioButtonMenuItem(new ZoomAction(root.panel, factor));
 
 			if (factor.isNotZoomed()) item.setSelected(true);
 
@@ -139,35 +135,15 @@ public class BrowserMenuBar extends JMenuBar {
 		addLevel(anti, anti_level, "High", 0);
 		debug.add(anti);
 
-
 		debug.add(new ShowDOMInspectorAction());
 		debug.add(new AbstractAction("Validation Console") {
+			private ValidationConsole validation_console;
+
 			public void actionPerformed(ActionEvent evt) {
-				if (root.validation_console == null) {
-					root.validation_console = new JFrame("Validation Console");
-					JFrame frame = root.validation_console;
-					JTextArea jta = new JTextArea();
-
-					root.error_handler.setTextArea(jta);
-
-					jta.setEditable(false);
-					jta.setLineWrap(true);
-					jta.setText("Validation Console: XML Parsing Error Messages");
-
-					frame.getContentPane().setLayout(new BorderLayout());
-					frame.getContentPane().add(new JScrollPane(jta), "Center");
-					JButton close = new JButton("Close");
-					frame.getContentPane().add(close, "South");
-					close.addActionListener(new ActionListener() {
-						public void actionPerformed(ActionEvent evt) {
-							root.validation_console.setVisible(false);
-						}
-					});
-
-					frame.pack();
-					frame.setSize(400, 300);
+				if (validation_console == null) {
+					validation_console = new ValidationConsole(root);
 				}
-				root.validation_console.setVisible(true);
+				validation_console.setVisible(true);
 			}
 		});
 
@@ -250,25 +226,31 @@ public class BrowserMenuBar extends JMenuBar {
 
 	class ShowDOMInspectorAction extends AbstractAction {
 		private DOMInspector inspector;
-		private JFrame inspectorFrame;
+		private JInternalFrame inspectorFrame;
 
 		ShowDOMInspectorAction() {
 			super("DOM Tree Inspector");
 			putValue(MNEMONIC_KEY, new Integer(KeyEvent.VK_D));
 		}
 
-		public void actionPerformed(ActionEvent evt) {
+		public void actionPerformed(final ActionEvent evt) {
 			if (inspectorFrame == null) {
-				inspectorFrame = new JFrame("DOM Tree Inspector");
+				inspectorFrame = new JInternalFrame("DOM Tree Inspector");
+				root.getDesktopPane().add(inspectorFrame);
+				root.addInternalFrameListener(new InternalFrameAdapter() {
+					@Override
+					public void internalFrameClosing(final InternalFrameEvent event) {
+						inspectorFrame.doDefaultCloseAction();
+					}
+				});
+				inspectorFrame.setClosable(true);
+				inspectorFrame.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
 			}
 			if (inspector == null) {
 				inspector = new DOMInspector(root.panel.view.getDocument(), root.panel.view.getSharedContext(), root.panel.view.getSharedContext().getCss());
-
 				inspectorFrame.getContentPane().add(inspector);
-
 				inspectorFrame.pack();
 				inspectorFrame.setSize(500, 600);
-				inspectorFrame.show();
 			} else {
 				inspector.setForDocument(root.panel.view.getDocument(), root.panel.view.getSharedContext(), root.panel.view.getSharedContext().getCss());
 			}
