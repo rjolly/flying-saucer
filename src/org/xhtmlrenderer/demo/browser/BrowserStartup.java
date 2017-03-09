@@ -23,8 +23,8 @@ public class BrowserStartup extends Frame {
 		this(null);
 	}
 
-	public BrowserStartup(final Frame parent) {
-		super(parent);
+	public BrowserStartup(final Frame owner) {
+		super(owner);
 		initUI();
 		setIcon(new ImageIcon(getClass().getResource("flyingsaucer24.png")));
 		setMimeType("text/html:application/xhtml+xml");
@@ -60,8 +60,8 @@ public class BrowserStartup extends Frame {
 	}
 
 	@Override
-	public Frame getFrame(final Frame parent) {
-		return new BrowserStartup(parent);
+	public Frame getFrame(final Frame owner) {
+		return new BrowserStartup(owner);
 	}
 
 	@Override
