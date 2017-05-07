@@ -6,7 +6,7 @@
   <groupId>com.github.rjolly</groupId>
   <artifactId>flying-saucer</artifactId>
   <packaging>jar</packaging>
-  <version>9.0.9</version>
+  <version>9.1.1</version>
   <url>http://github.com/flyingsaucerproject/flyingsaucer/</url>
   <description>XML/XHTML+MathML+SVG and CSS 2.1 browser in pure Java.</description>
   <licenses>
@@ -44,17 +44,17 @@
     <dependency>
       <groupId>net.java.linoleum</groupId>
       <artifactId>application</artifactId>
-      <version>1.3</version>
+      <version>1.4</version>
     </dependency>
     <dependency>
       <groupId>org.xhtmlrenderer</groupId>
       <artifactId>flying-saucer-core</artifactId>
-      <version>9.0.9</version>
+      <version>9.1.1</version>
     </dependency>
     <dependency>
       <groupId>org.xhtmlrenderer</groupId>
       <artifactId>flying-saucer-pdf</artifactId>
-      <version>9.0.9</version>
+      <version>9.1.1</version>
     </dependency>
     <dependency>
       <groupId>net.sourceforge.jeuclid</groupId>
