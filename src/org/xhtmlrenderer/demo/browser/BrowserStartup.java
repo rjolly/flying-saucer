@@ -24,6 +24,7 @@ public class BrowserStartup extends Frame {
 		setIcon(new ImageIcon(getClass().getResource("flyingsaucer24.png")));
 		setMimeType("text/html:application/xhtml+xml");
 		setScheme("http:https");
+		setURI(startPage);
 	}
 
 	private void initUI() {
@@ -60,27 +61,19 @@ public class BrowserStartup extends Frame {
 		return new BrowserStartup();
 	}
 
-	@Override
-	public void setURI(final URI uri) {
-		panel.loadPage(uri.toString());
-	}
-
-	@Override
-	public URI getURI() {
-		final String str = panel.view.getSharedContext().getBaseURL();
-		if (str != null) try {
-			return new URI(str);
+	void setURI(final String str) {
+		try {
+			setURI(new URI(str));
 		} catch (final URISyntaxException ex) {
 			ex.printStackTrace();
 		}
-		return null;
 	}
 
 	@Override
 	public void open() {
-		final String str = panel.view.getSharedContext().getBaseURL();
-		if (str == null) {
-			panel.loadPage(startPage);
+		final URI uri = getURI();
+		if (uri != null) {
+			panel.loadPage(uri.toString());
 		}
 	}
 
