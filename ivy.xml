@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ivy-module version="2.0" xmlns:e="http://ant.apache.org/ivy/extra">
-    <info module="flying-saucer" organisation="com.github.rjolly" revision="9.1.1"/>
+    <info module="flying-saucer" organisation="com.github.rjolly" revision="9.1.12"/>
     <configurations>
         <conf name="default" extends="runtime,master"/>
         <conf name="master"/>
@@ -20,12 +20,39 @@
     </publications>
     <dependencies>
         <dependency org="net.java.linoleum" name="application" rev="1.4" conf="compile->master;runtime->default"/>
-        <dependency org="org.xhtmlrenderer" name="flying-saucer-core" rev="9.1.1" conf="compile->master;runtime->default"/>
-        <dependency org="org.xhtmlrenderer" name="flying-saucer-pdf" rev="9.1.1" conf="compile->master;runtime->default"/>
-        <dependency org="net.sourceforge.jeuclid" name="jeuclid-core" rev="3.1.9" conf="compile->master;runtime->default"/>
-        <dependency org="net.sourceforge.jeuclid" name="jeuclid-fop" rev="3.1.9" conf="compile->master;runtime->default"/>
-        <dependency org="org.apache.xmlgraphics" name="batik-transcoder" rev="1.7" conf="compile->master;runtime->default"/>
-        <dependency org="org.apache.xmlgraphics" name="batik-codec" rev="1.7" conf="compile->master;runtime->default"/>
-        <dependency org="xalan" name="xalan" rev="2.7.2" conf="compile->master;runtime->default"/>
+        <dependency org="org.xhtmlrenderer" name="flying-saucer-core" rev="9.1.12" conf="compile->master;runtime->default"/>
+        <dependency org="org.xhtmlrenderer" name="flying-saucer-pdf" rev="9.1.12" conf="compile->master;runtime->default"/>
+        <dependency org="net.sourceforge.jeuclid" name="jeuclid-core" rev="3.1.9" conf="compile->master;runtime->default">
+            <exclude org="org.apache.xmlgraphics" module="batik-dom" name="*" type="*" ext="*" conf="" matcher="exact"/>
+        </dependency>
+        <dependency org="org.apache.xmlgraphics" name="batik-transcoder" rev="1.7" conf="compile->master;runtime->default">
+            <exclude org="org.apache.xmlgraphics" module="fop" name="*" type="*" ext="*" conf="" matcher="exact"/>
+            <exclude org="org.apache.xmlgraphics" module="batik-bridge" name="*" type="*" ext="*" conf="" matcher="exact"/>
+            <exclude org="org.apache.xmlgraphics" module="batik-dom" name="*" type="*" ext="*" conf="" matcher="exact"/>
+        </dependency>
+        <dependency org="org.apache.xmlgraphics" name="batik-bridge" rev="1.7" conf="compile->master;runtime->default">
+            <exclude org="xalan" module="xalan" name="*" type="*" ext="*" conf="" matcher="exact"/>
+            <exclude org="org.apache.xmlgraphics" module="batik-script" name="*" type="*" ext="*" conf="" matcher="exact"/>
+            <exclude org="org.apache.xmlgraphics" module="batik-dom" name="*" type="*" ext="*" conf="" matcher="exact"/>
+        </dependency>
+        <dependency org="org.apache.xmlgraphics" name="batik-script" rev="1.7" conf="compile->master;runtime->default">
+            <exclude org="org.apache.xmlgraphics" module="batik-bridge" name="*" type="*" ext="*" conf="" matcher="exact"/>
+            <exclude org="org.apache.xmlgraphics" module="batik-dom" name="*" type="*" ext="*" conf="" matcher="exact"/>
+        </dependency>
+        <dependency org="org.apache.xmlgraphics" name="batik-dom" rev="1.7" conf="compile->master;runtime->default">
+            <exclude org="xalan" module="xalan" name="*" type="*" ext="*" conf="" matcher="exact"/>
+        </dependency>
+        <dependency org="org.apache.xmlgraphics" name="batik-anim" rev="1.7" conf="compile->master;runtime->default">
+            <exclude org="org.apache.xmlgraphics" module="batik-dom" name="*" type="*" ext="*" conf="" matcher="exact"/>
+        </dependency>
+        <dependency org="org.apache.xmlgraphics" name="batik-codec" rev="1.7" conf="compile->master;runtime->default">
+            <exclude org="org.apache.xmlgraphics" module="batik-bridge" name="*" type="*" ext="*" conf="" matcher="exact"/>
+            <exclude org="org.apache.xmlgraphics" module="batik-transcoder" name="*" type="*" ext="*" conf="" matcher="exact"/>
+        </dependency>
+        <dependency org="com.lowagie" name="itext" rev="2.1.7" conf="compile->master;runtime->default">
+            <exclude org="bouncycastle" module="bcmail-jdk14" name="*" type="*" ext="*" conf="" matcher="exact"/>
+            <exclude org="bouncycastle" module="bcprov-jdk14" name="*" type="*" ext="*" conf="" matcher="exact"/>
+            <exclude org="bouncycastle" module="bctsp-jdk14" name="*" type="*" ext="*" conf="" matcher="exact"/>
+        </dependency>
     </dependencies>
 </ivy-module>
