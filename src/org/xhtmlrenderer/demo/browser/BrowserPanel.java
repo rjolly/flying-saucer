@@ -273,7 +273,6 @@ public class BrowserPanel extends JPanel implements DocumentListener {
 		c.weighty = 0.1;
 		gbl.setConstraints(status, c);
 		add(status);
-
 	}
 
 	public void createActions() {
@@ -338,7 +337,7 @@ public class BrowserPanel extends JPanel implements DocumentListener {
 			ex.printStackTrace();
 		}
 	}
-	
+
 	public void exportToPdf( String path ) {
 		if (manager.getBaseURL() != null) {
 			setStatus( "Exporting to " + path + "..." );
@@ -354,7 +353,7 @@ public class BrowserPanel extends JPanel implements DocumentListener {
 
 				PDFCreationListener pdfCreationListener = new XHtmlMetaToPdfInfoAdapter( doc );
 				renderer.setListener( pdfCreationListener );
-							  
+
 				renderer.setDocument(manager.getBaseURL());
 				renderer.layout();
 
@@ -458,7 +457,6 @@ public class BrowserPanel extends JPanel implements DocumentListener {
 
 		url.setText(manager.getBaseURL());
 	}
-
 
 	public void onLayoutException(Throwable t) {
 		// TODO: clean
