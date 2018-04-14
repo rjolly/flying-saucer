@@ -22,12 +22,13 @@ import org.xhtmlrenderer.util.XRLog;
 import org.xhtmlrenderer.util.XRRuntimeException;
 
 import javax.swing.*;
+import javax.swing.event.PopupMenuEvent;
+import javax.swing.event.PopupMenuListener;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.awt.*;
 import java.awt.datatransfer.StringSelection;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.io.FileOutputStream;
@@ -41,6 +42,7 @@ import java.util.logging.Logger;
 
 public class BrowserPanel extends JPanel implements DocumentListener {
 	private final ChainedReplacedElementFactory cef = new ChainedReplacedElementFactory();
+	private final Action copyLinkLocationAction = new CopyLinkLocationAction();
 	private String uri;
 	private JButton forward;
 	private JButton backward;
@@ -63,6 +65,18 @@ public class BrowserPanel extends JPanel implements DocumentListener {
 	private PanelManager manager;
 	private JButton goToPage;
 	public JToolBar toolbar;
+
+	private class CopyLinkLocationAction extends AbstractAction {
+		public CopyLinkLocationAction() {
+			super("Copy link location");
+		}
+
+		@Override
+		public void actionPerformed(final ActionEvent e) {
+			final StringSelection selection = new StringSelection(uri);
+			getToolkit().getSystemClipboard().setContents(selection, selection);
+		}
+	}
 
 	public BrowserPanel(BrowserStartup root, BrowserPanelListener listener) {
 		super();
@@ -180,15 +194,32 @@ public class BrowserPanel extends JPanel implements DocumentListener {
 
 	private void initPopup() {
 		popup = new JPopupMenu();
-		final JMenuItem item = new JMenuItem();
-		item.setText("Copy link location");
-		item.addActionListener(new ActionListener() {
-			public void actionPerformed(final ActionEvent evt) {
-				final StringSelection selection = new StringSelection(uri);
-				getToolkit().getSystemClipboard().setContents(selection, selection);
+		popup.addPopupMenuListener(new PopupMenuListener() {
+			public void popupMenuCanceled(final PopupMenuEvent evt) {
 			}
-		});
-		popup.add(item);
+			public void popupMenuWillBecomeInvisible(final PopupMenuEvent evt) {
+			}
+			public void popupMenuWillBecomeVisible(final PopupMenuEvent evt) {
+				prepare();
+			}
+                });
+	}
+
+	private void prepare() {
+		popup.removeAll();
+		boolean sep0 = false;
+		if (uri != null) try {
+			final URI u = new URI(uri);
+			if (u.isAbsolute()) {
+				sep0 = root.getApplicationManager().populate(u, popup);
+			}
+		} catch (final URISyntaxException ex) {
+			ex.printStackTrace();
+		}
+		if (sep0) {
+			popup.addSeparator();
+		}
+		popup.add(copyLinkLocationAction);
 	}
 
 	private void initToolbar() {

@@ -23,7 +23,7 @@ public class BrowserStartup extends Frame {
 		initUI();
 		setIcon(new ImageIcon(getClass().getResource("flyingsaucer24.png")));
 		setMimeType("text/html:application/xhtml+xml");
-		setScheme("http:https");
+		setScheme("demo:http:https");
 		setURI(startPage);
 	}
 
