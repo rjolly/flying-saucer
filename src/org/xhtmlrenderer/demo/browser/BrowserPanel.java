@@ -34,6 +34,8 @@ import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.io.StringReader;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -104,15 +106,22 @@ public class BrowserPanel extends JPanel implements DocumentListener {
 			public void linkClicked(final BasicPanel panel, final String uri) {
 				if (!popup.isVisible()) {
 					onMouseOut(panel, null);
-					if (uri.startsWith("demoNav")) {
-						final String pg = uri.split(":")[1];
-						if (pg.equals("back")) {
-							root.menu.navigateToPriorDemo();
+					try {
+						final URI u = new URI(uri);
+						if ("demoNav".equals(u.getScheme())) {
+							final String pg = u.getSchemeSpecificPart();
+							if (pg.equals("back")) {
+								root.menu.navigateToPriorDemo();
+							} else {
+								root.menu.navigateToNextDemo();
+							}
+						} else if (u.isAbsolute()) {
+							loadPage(uri);
 						} else {
-							root.menu.navigateToNextDemo();
+							super.linkClicked(panel, uri);
 						}
-					} else {
-						super.linkClicked(panel, uri);
+					} catch (final URISyntaxException e) {
+						e.printStackTrace();
 					}
 				}
 			}
