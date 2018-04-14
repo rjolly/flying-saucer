@@ -324,6 +324,11 @@ public class BrowserPanel extends JPanel implements DocumentListener {
 
 	//TODO: make this part of an implementation of UserAgentCallback instead
 	public void loadPage(final String url_text) {
+		root.setURI(url_text);
+		root.open();
+	}
+
+	void doLoadPage(final String url_text) {
 		try {
 			logger.info("Loading Page: " + url_text);
 			view.setCursor(new Cursor(Cursor.WAIT_CURSOR));

@@ -73,7 +73,11 @@ public class BrowserStartup extends Frame {
 	public void open() {
 		final URI uri = getURI();
 		if (uri != null) {
-			panel.loadPage(uri.toString());
+			if (canOpen(uri)) {
+				panel.doLoadPage(uri.toString());
+			} else {
+				getApplicationManager().open(uri);
+			}
 		}
 	}
 
