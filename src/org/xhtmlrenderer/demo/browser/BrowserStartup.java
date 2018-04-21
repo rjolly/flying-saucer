@@ -6,9 +6,10 @@ import java.net.URISyntaxException;
 import javax.swing.ImageIcon;
 import javax.swing.border.EtchedBorder;
 
+import linoleum.application.FileSupport;
 import linoleum.application.Frame;
 
-public class BrowserStartup extends Frame {
+public class BrowserStartup extends FileSupport {
 	public BrowserPanel panel;
 	BrowserMenuBar menu;
 	BrowserActions actions;
