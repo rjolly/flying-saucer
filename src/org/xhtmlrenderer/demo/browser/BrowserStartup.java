@@ -22,6 +22,7 @@ public class BrowserStartup extends FileSupport {
 
 	public BrowserStartup() {
 		initUI();
+		setDescription("XML/XHTML+MathML+SVG and CSS 2.1 browser in pure Java");
 		setIcon(new ImageIcon(getClass().getResource("flyingsaucer24.png")));
 		setMimeType("text/html:application/xhtml+xml");
 		setScheme("demo:http:https");
