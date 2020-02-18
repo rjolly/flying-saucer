@@ -6,7 +6,7 @@
   <groupId>com.github.rjolly</groupId>
   <artifactId>flying-saucer</artifactId>
   <packaging>jar</packaging>
-  <version>9.1.12</version>
+  <version>9.1.20</version>
   <url>http://github.com/flyingsaucerproject/flyingsaucer/</url>
   <description>XML/XHTML+MathML+SVG and CSS 2.1 browser in pure Java.</description>
   <licenses>
@@ -49,17 +49,17 @@
     <dependency>
       <groupId>org.xhtmlrenderer</groupId>
       <artifactId>flying-saucer-core</artifactId>
-      <version>9.1.12</version>
+      <version>9.1.20</version>
     </dependency>
     <dependency>
       <groupId>org.xhtmlrenderer</groupId>
       <artifactId>flying-saucer-pdf</artifactId>
-      <version>9.1.12</version>
+      <version>9.1.20</version>
     </dependency>
     <dependency>
-      <groupId>net.sourceforge.jeuclid</groupId>
+      <groupId>de.rototor.jeuclid</groupId>
       <artifactId>jeuclid-core</artifactId>
-      <version>3.1.9</version>
+      <version>3.1.14</version>
       <exclusions>
         <exclusion>
           <groupId>org.apache.xmlgraphics</groupId>
@@ -70,7 +70,7 @@
     <dependency>
       <groupId>org.apache.xmlgraphics</groupId>
       <artifactId>batik-transcoder</artifactId>
-      <version>1.7</version>
+      <version>1.12</version>
       <exclusions>
         <exclusion>
           <groupId>org.apache.xmlgraphics</groupId>
@@ -89,7 +89,7 @@
     <dependency>
       <groupId>org.apache.xmlgraphics</groupId>
       <artifactId>batik-bridge</artifactId>
-      <version>1.7</version>
+      <version>1.12</version>
       <exclusions>
         <exclusion>
           <groupId>xalan</groupId>
@@ -108,7 +108,7 @@
     <dependency>
       <groupId>org.apache.xmlgraphics</groupId>
       <artifactId>batik-script</artifactId>
-      <version>1.7</version>
+      <version>1.12</version>
       <exclusions>
         <exclusion>
           <groupId>org.apache.xmlgraphics</groupId>
@@ -123,7 +123,7 @@
     <dependency>
       <groupId>org.apache.xmlgraphics</groupId>
       <artifactId>batik-dom</artifactId>
-      <version>1.7</version>
+      <version>1.12</version>
       <exclusions>
         <exclusion>
           <groupId>xalan</groupId>
@@ -134,7 +134,7 @@
     <dependency>
       <groupId>org.apache.xmlgraphics</groupId>
       <artifactId>batik-anim</artifactId>
-      <version>1.7</version>
+      <version>1.12</version>
       <exclusions>
         <exclusion>
           <groupId>org.apache.xmlgraphics</groupId>
@@ -145,7 +145,7 @@
     <dependency>
       <groupId>org.apache.xmlgraphics</groupId>
       <artifactId>batik-codec</artifactId>
-      <version>1.7</version>
+      <version>1.12</version>
       <exclusions>
         <exclusion>
           <groupId>org.apache.xmlgraphics</groupId>
