@@ -6,8 +6,13 @@ import org.xhtmlrenderer.util.Uu;
 import org.xhtmlrenderer.util.XRLog;
 import org.xhtmlrenderer.util.GeneralUtil;
 import org.xml.sax.InputSource;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Entities;
 
 import javax.xml.transform.sax.SAXSource;
+import javax.activation.MimeType;
+import javax.activation.MimeTypeParseException;
 import java.io.*;
 import java.net.*;
 import java.util.ArrayList;
@@ -74,8 +79,7 @@ public class PanelManager extends DelegatingUserAgent {
 
 				XRLog.general("Encoded URI: " + sbURI);
 				file = new File(new URI(sbURI.toString()));
-			} catch (URISyntaxException
-					e) {
+			} catch (URISyntaxException e) {
 				XRLog.exception("Invalid file URI " + uri, e);
 				return getNotFoundDocument(uri);
 			}
@@ -92,21 +96,35 @@ public class PanelManager extends DelegatingUserAgent {
 			uc.connect();
 			String contentType = uc.getContentType();
 			//Maybe should popup a choice when content/unknown!
+			if (contentType == null) contentType = "content/unknown";
 			if (contentType.equals("text/plain") || contentType.equals("content/unknown")) {
 				inputStream = uc.getInputStream();
 				SAXSource source = new SAXSource(new PlainTextXMLReader(inputStream), new InputSource());
 				xr = XMLResource.load(source);
+			} else if (contentType.startsWith("text/html")) {
+				inputStream = uc.getInputStream();
+				final String charsetName = new MimeType(contentType).getParameter("charset");
+				final Document document = Jsoup.parse(inputStream, charsetName, uri);
+				document.select("script").remove();
+				document.outputSettings().syntax(Document.OutputSettings.Syntax.xml);
+				document.outputSettings().escapeMode(Entities.EscapeMode.xhtml);
+				xr = XMLResource.load(new StringReader(document.toString()));
 			} else if (contentType.startsWith("image")) {
 				String doc = "<img src='" + uri + "'/>";
 				xr = XMLResource.load(new StringReader(doc));
-			} else {
+			} else if (contentType.startsWith("text/xml") || contentType.startsWith("application/xml") || contentType.startsWith("application/xhtml+xml")) {
 				inputStream = uc.getInputStream();
 				xr = XMLResource.load(inputStream);
+			} else {
+				String doc = "<html><h1>Unsupported content type</h1><p><pre>" + contentType + "</pre></p></html>";
+				xr = XMLResource.load(new StringReader(doc));
 			}
 		} catch (MalformedURLException e) {
 			XRLog.exception("bad URL given: " + uri, e);
 		} catch (IOException e) {
 			XRLog.exception("IO problem for " + uri, e);
+		} catch (MimeTypeParseException e) {
+			XRLog.exception("Mime type problem for " + uri, e);
 		} finally {
 			if (inputStream != null) {
 				try {
