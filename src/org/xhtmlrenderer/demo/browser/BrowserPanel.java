@@ -157,6 +157,7 @@ public class BrowserPanel extends JPanel implements DocumentListener {
 				}
 			}
 		});
+		view.addDocumentListener(this);
 		view.addDocumentListener(manager);
 		view.setCenteredPagedView(true);
 		view.setBackground(Color.LIGHT_GRAY);
@@ -337,13 +338,11 @@ public class BrowserPanel extends JPanel implements DocumentListener {
 	public void goForward() {
 		String uri = manager.getForward();
 		view.setDocument(uri);
-		updateButtons();
 	}
 
 	public void goBack() {
 		String uri = manager.getBack();
 		view.setDocument(uri);
-		updateButtons();
 	}
 
 	public void reloadPage() {
@@ -364,15 +363,6 @@ public class BrowserPanel extends JPanel implements DocumentListener {
 			logger.info("Loading Page: " + url_text);
 			view.setCursor(new Cursor(Cursor.WAIT_CURSOR));
 			view.setDocument(url_text);
-			view.addDocumentListener(BrowserPanel.this);
-
-			updateButtons();
-
-			setStatus("Successfully loaded: " + url_text);
-
-			if (listener != null) {
-				listener.pageLoadSuccess(url_text, view.getDocumentTitle());
-			}
 		} catch (XRRuntimeException ex) {
 			XRLog.general(Level.SEVERE, "Runtime exception", ex);
 			setStatus("Can't load document");
@@ -481,6 +471,11 @@ public class BrowserPanel extends JPanel implements DocumentListener {
 	}
 
 	public void documentLoaded() {
+		final String url_text = manager.getBaseURL();
+		updateButtons();
+		url.setText(url_text);
+		setStatus("Successfully loaded: " + url_text);
+		listener.pageLoadSuccess(url_text, view.getDocumentTitle());
 		view.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 	}
 
@@ -499,8 +494,6 @@ public class BrowserPanel extends JPanel implements DocumentListener {
 		} else {
 			root.actions.forward.setEnabled(false);
 		}
-
-		url.setText(manager.getBaseURL());
 	}
 
 	public void onLayoutException(Throwable t) {
