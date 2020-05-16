@@ -346,7 +346,7 @@ public class BrowserPanel extends JPanel implements DocumentListener {
 	}
 
 	public void reloadPage() {
-		logger.info("Reloading Page: ");
+		logger.config("Reloading Page: ");
 		if (manager.getBaseURL() != null) {
 			loadPage(manager.getBaseURL());
 		}
@@ -360,7 +360,7 @@ public class BrowserPanel extends JPanel implements DocumentListener {
 
 	void doLoadPage(final String url_text) {
 		try {
-			logger.info("Loading Page: " + url_text);
+			logger.config("Loading Page: " + url_text);
 			view.setCursor(new Cursor(Cursor.WAIT_CURSOR));
 			view.setDocument(url_text);
 		} catch (XRRuntimeException ex) {
