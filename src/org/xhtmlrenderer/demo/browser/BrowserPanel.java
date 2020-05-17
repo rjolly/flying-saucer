@@ -336,12 +336,12 @@ public class BrowserPanel extends JPanel implements DocumentListener {
 
 	public void goForward() {
 		String uri = manager.getForward();
-		view.setDocument(uri);
+		loadPage(uri);
 	}
 
 	public void goBack() {
 		String uri = manager.getBack();
-		view.setDocument(uri);
+		loadPage(uri);
 	}
 
 	public void reloadPage() {
