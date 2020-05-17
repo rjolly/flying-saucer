@@ -118,43 +118,42 @@ public class BrowserPanel extends JPanel implements DocumentListener {
 		view.addMouseTrackingListener(new LinkListener() {
 			@Override
 			public void linkClicked(final BasicPanel panel, final String uri) {
-				if (!popup.isVisible()) {
-					onMouseOut(panel, null);
-					try {
-						final URI u = new URI(uri);
-						if ("demoNav".equals(u.getScheme())) {
-							final String pg = u.getSchemeSpecificPart();
-							if (pg.equals("back")) {
-								root.menu.navigateToPriorDemo();
-							} else {
-								root.menu.navigateToNextDemo();
-							}
-						} else if (u.isAbsolute()) {
-							loadPage(uri);
+				if (popup.isShowing()) {
+					return;
+				}
+				if (uri != null) try {
+					final URI u = new URI(uri);
+					if ("demoNav".equals(u.getScheme())) {
+						final String pg = u.getSchemeSpecificPart();
+						if (pg.equals("back")) {
+							root.menu.navigateToPriorDemo();
 						} else {
-							super.linkClicked(panel, uri);
+							root.menu.navigateToNextDemo();
 						}
-					} catch (final URISyntaxException e) {
-						e.printStackTrace();
+					} else if (u.isAbsolute()) {
+						loadPage(uri);
+					} else {
+						super.linkClicked(panel, uri);
 					}
+				} catch (final URISyntaxException e) {
+					e.printStackTrace();
 				}
 			}
 
 			@Override
 			public void onMouseOver(final BasicPanel panel, final Box box) {
-				uri = findLink(panel, box.getElement());
+				final String uri = findLink(panel, box.getElement());
 				if (uri != null) {
-					setStatus(uri);
+					setStatus(BrowserPanel.this.uri = uri);
 					panel.setComponentPopupMenu(popup);
 				}
 			}
 
 			@Override
 			public void onMouseOut(final BasicPanel panel, final Box box) {
-				if (uri != null) {
-					panel.setComponentPopupMenu(null);
-					setStatus("");
-				}
+				panel.setComponentPopupMenu(null);
+				setStatus("");
+				uri = null;
 			}
 		});
 		view.addDocumentListener(this);
