@@ -14,6 +14,11 @@ public class BrowserStartup extends FileSupport {
 	BrowserMenuBar menu;
 	BrowserActions actions;
 	final String startPage = "demo:demos/splash/splash.html";
+	private final BrowserPanelListener listener = new BrowserPanelListener() {
+		public void pageLoadSuccess(final String url, final String title) {
+			setTitle(title + (title.length() > 0 ? " - " : "") + "Flying Saucer");
+		}
+	};
 
 	static {
 		System.setProperty("xr.css.user-agent-default-css", "/org/xhtmlrenderer/demo/browser/");
@@ -26,7 +31,6 @@ public class BrowserStartup extends FileSupport {
 		setIcon(new ImageIcon(getClass().getResource("flyingsaucer24.png")));
 		setMimeType("text/html:application/xhtml+xml");
 		setScheme("demo:http:https");
-		setURI(startPage);
 	}
 
 	private void initUI() {
@@ -40,7 +44,7 @@ public class BrowserStartup extends FileSupport {
 		actions = new BrowserActions(this);
 		actions.init();
 
-		panel = new BrowserPanel(this, new FrameBrowserPanelListener());
+		panel = new BrowserPanel(this, listener);
 		panel.init();
 		panel.createActions();
 
@@ -80,12 +84,8 @@ public class BrowserStartup extends FileSupport {
 			} else {
 				getApplicationManager().open(uri);
 			}
-		}
-	}
-
-	class FrameBrowserPanelListener implements BrowserPanelListener {
-		public void pageLoadSuccess(final String url, final String title) {
-			setTitle(title + (title.length() > 0 ? " - " : "") + "Flying Saucer");
+		} else {
+			panel.doLoadPage(startPage);
 		}
 	}
 }
