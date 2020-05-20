@@ -97,7 +97,7 @@ public class PanelManager extends DelegatingUserAgent {
 			String contentType = uc.getContentType();
 			//Maybe should popup a choice when content/unknown!
 			if (contentType == null) contentType = "content/unknown";
-			if (contentType.equals("text/plain") || contentType.equals("content/unknown")) {
+			if (contentType.startsWith("text/plain")) {
 				inputStream = uc.getInputStream();
 				SAXSource source = new SAXSource(new PlainTextXMLReader(inputStream), new InputSource());
 				xr = XMLResource.load(source);
