@@ -142,15 +142,21 @@ public class BrowserPanel extends JPanel implements DocumentListener {
 
 			@Override
 			public void onMouseOver(final BasicPanel panel, final Box box) {
-				final String uri = findLink(panel, box.getElement());
+				if (popup.isShowing()) {
+					return;
+				}
+				uri = findLink(panel, box.getElement());
 				if (uri != null) {
-					setStatus(BrowserPanel.this.uri = uri);
+					setStatus(uri);
 					panel.setComponentPopupMenu(popup);
 				}
 			}
 
 			@Override
 			public void onMouseOut(final BasicPanel panel, final Box box) {
+				if (popup.isShowing()) {
+					return;
+				}
 				panel.setComponentPopupMenu(null);
 				setStatus("");
 				uri = null;
