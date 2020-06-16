@@ -9,6 +9,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.DocumentBuilder;
 import org.w3c.dom.Element;
@@ -46,7 +47,7 @@ public abstract class IconReplacedElementFactory implements ReplacedElementFacto
 
 			content = getElementContent(elem);
 			cc = getJComponent(getElementIcon(elem));
-		} catch (final Exception e) {
+		} catch (final IconReplacedException e) {
 			XRLog.general(Level.WARNING, "Could not replace Icon element; rendering failed" +
 					" in Icon renderer. Skipping and using blank JPanel.", e);
 			cc = getDefaultJComponent(content, cssWidth, cssHeight);
@@ -65,16 +66,19 @@ public abstract class IconReplacedElementFactory implements ReplacedElementFacto
 		}
 	}
 
-	private Icon getElementIcon(final Element elem) throws Exception {
-		final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-		final DocumentBuilder builder = factory.newDocumentBuilder();
-		final Document doc = builder.newDocument();
-		doc.appendChild(doc.importNode(elem, true));
-		final Image image = createImage(doc);
-		return new ImageIcon(image);
+	private Icon getElementIcon(final Element elem) throws IconReplacedException {
+		try {
+			final DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+			final Document doc = builder.newDocument();
+			doc.appendChild(doc.importNode(elem, true));
+			final Image image = createImage(doc);
+			return new ImageIcon(image);
+		} catch (final ParserConfigurationException e) {
+			throw new IconReplacedException(e);
+		}
 	}
 
-	public abstract Image createImage(final Document doc) throws Exception;
+	public abstract Image createImage(final Document doc) throws IconReplacedException;
 
 	private String getElementContent(final Element elem) {
 		if ( elem.getChildNodes().getLength() > 0 ) {

@@ -5,8 +5,10 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.io.Writer;
 import java.io.StringWriter;
+import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerConfigurationException;
@@ -14,7 +16,9 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.dom.DOMSource;
+import org.xml.sax.SAXException;
 import org.w3c.dom.Document;
+import org.w3c.dom.Node;
 import net.sourceforge.jeuclid.DOMBuilder;
 import net.sourceforge.jeuclid.MathMLParserSupport;
 import net.sourceforge.jeuclid.MutableLayoutContext;
@@ -44,9 +48,21 @@ public class JEuclidReplacedElementFactory extends IconReplacedElementFactory {
 		return writer.toString().replaceAll("\u2148", "i");
 	}
 
-	public Image createImage(final Document doc) throws Exception {
+	public Image createImage(final Document doc) throws IconReplacedException {
+		try {
+			return createMathImage(MathMLParserSupport.parseString(c2p(doc)));
+		} catch (final SAXException e) {
+			throw new IconReplacedException(e);
+		} catch (final ParserConfigurationException e) {
+			throw new IconReplacedException(e);
+		} catch (final IOException e) {
+			throw new IconReplacedException(e);
+		}
+	}
+
+	private Image createMathImage(final Node node) {
 		((MutableLayoutContext) LayoutContextImpl.getDefaultLayoutContext()).setParameter(Parameter.SCRIPTMINSIZE, new Float(10f));
-		final JEuclidView view = DOMBuilder.getInstance().createJeuclidDom(MathMLParserSupport.parseString(c2p(doc))).getDefaultView();
+		final JEuclidView view = DOMBuilder.getInstance().createJeuclidDom(node).getDefaultView();
 		final int width = (int) Math.ceil(view.getWidth());
 		final int height = (int) (Math.ceil(view.getAscentHeight()) + Math.ceil(view.getDescentHeight()));
 
