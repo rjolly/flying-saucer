@@ -6,7 +6,7 @@
   <groupId>com.github.rjolly</groupId>
   <artifactId>flying-saucer</artifactId>
   <packaging>jar</packaging>
-  <version>9.1.22</version>
+  <version>9.1.23</version>
   <url>http://github.com/flyingsaucerproject/flyingsaucer/</url>
   <description>XML/XHTML+MathML+SVG and CSS 2.1 browser in pure Java.</description>
   <licenses>
