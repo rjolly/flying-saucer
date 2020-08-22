@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ivy-module version="2.0" xmlns:e="http://ant.apache.org/ivy/extra">
-    <info module="flying-saucer" organisation="com.github.rjolly" revision="9.1.23"/>
+    <info module="flying-saucer" organisation="com.github.rjolly" revision="9.1.24"/>
     <configurations>
         <conf name="default" extends="runtime,master"/>
         <conf name="master"/>
