@@ -11,13 +11,15 @@ public class SVGBatikReplacedElementFactory extends IconReplacedElementFactory {
 		super("svg");
 	}
 
-	public Image createImage(final Document doc) {
+	public Image createImage(final Document doc) throws IconReplacedException {
 		final MemoryTranscoder transcoder = new MemoryTranscoder();
 		try {
 			transcoder.transcode(new TranscoderInput(doc), new TranscoderOutput());
+			return transcoder.getImage();
 		} catch (final TranscoderException e) {
-			e.printStackTrace();
+			throw new IconReplacedException(e);
+		} catch (final ClassCastException e) {
+			throw new IconReplacedException(e);
 		}
-		return transcoder.getImage();
 	}
 }
