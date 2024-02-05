@@ -45,7 +45,7 @@ public class BrowserActions {
 		};
 		// TODO: need right API call for ESC
 		//stop.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE));
-		stop.putValue(Action.MNEMONIC_KEY, new Integer(KeyEvent.VK_S));
+		stop.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_S);
 
 		open_file = new AbstractAction() {
 			public void actionPerformed(ActionEvent evt) {
@@ -54,7 +54,7 @@ public class BrowserActions {
 		};
 		open_file.putValue(Action.NAME, "Open File...");
 		setAccel(open_file, KeyEvent.VK_O);
-		setMnemonic(open_file, new Integer(KeyEvent.VK_O));
+		setMnemonic(open_file, KeyEvent.VK_O);
 		
 		export_pdf = new AbstractAction() {
 			public void actionPerformed(ActionEvent evt) {
@@ -70,13 +70,13 @@ public class BrowserActions {
 		}
 		
 		/*setAccel(export_pdf, KeyEvent.VK_E);
-		setMnemonic(export_pdf, new Integer(KeyEvent.VK_E));*/
+		setMnemonic(export_pdf, KeyEvent.VK_E);*/
 
 		/* printing disabled for R6
 		url = getImageUrl("images/document-print.png");
 		print = new PrintAction(root, new ImageIcon(url));
 		setAccel(print, KeyEvent.VK_P);
-		setMnemonic(print, new Integer(KeyEvent.VK_P));
+		setMnemonic(print, KeyEvent.VK_P);
 		*/
 
 		quit = new AbstractAction() {
@@ -87,7 +87,7 @@ public class BrowserActions {
 
 		setName(quit, "Quit");
 		setAccel(quit, KeyEvent.VK_Q);
-		setMnemonic(quit, new Integer(KeyEvent.VK_Q));
+		setMnemonic(quit, KeyEvent.VK_Q);
 		
 		url = getImageUrl("images/go-previous.png");
 		backward = new EmptyAction("Back", "Go back one page", new ImageIcon(url)) {
@@ -151,14 +151,14 @@ public class BrowserActions {
 		reload.putValue(Action.ACCELERATOR_KEY,
 				KeyStroke.getKeyStroke(KeyEvent.VK_F5,
 						InputEvent.SHIFT_MASK));
-		reload.putValue(Action.MNEMONIC_KEY, new Integer(KeyEvent.VK_R));
+		reload.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_R);
 
 		print_preview = new EmptyAction("Print Preview", "Print preview mode", null) {
 			public void actionPerformed(ActionEvent evt) {
 				togglePrintPreview();
 			}
 		};
-		print_preview.putValue(Action.MNEMONIC_KEY, new Integer(KeyEvent.VK_V));
+		print_preview.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_V);
 
 		load = new AbstractAction("Load") {
 			public void actionPerformed(ActionEvent evt) {
@@ -224,19 +224,19 @@ public class BrowserActions {
 		increase_font.putValue(Action.ACCELERATOR_KEY,
 				KeyStroke.getKeyStroke(KeyEvent.VK_PLUS,
 						Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
-		increase_font.putValue(Action.MNEMONIC_KEY, new Integer(KeyEvent.VK_I));
+		increase_font.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_I);
 
 		reset_font = new FontSizeAction(root, FontSizeAction.RESET);
 		reset_font.putValue(Action.ACCELERATOR_KEY,
 				KeyStroke.getKeyStroke(KeyEvent.VK_0,
 						Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
-		reset_font.putValue(Action.MNEMONIC_KEY, new Integer(KeyEvent.VK_N));
+		reset_font.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_N);
 
 		decrease_font = new FontSizeAction(root, FontSizeAction.DECREMENT);
 		decrease_font.putValue(Action.ACCELERATOR_KEY,
 				KeyStroke.getKeyStroke(KeyEvent.VK_MINUS,
 						Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
-		decrease_font.putValue(Action.MNEMONIC_KEY, new Integer(KeyEvent.VK_D));
+		decrease_font.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_D);
 
 		setName(increase_font, "Increase");
 		setName(reset_font, "Normal");

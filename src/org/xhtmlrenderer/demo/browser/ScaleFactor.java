@@ -9,7 +9,7 @@ public class ScaleFactor {
 
 	public ScaleFactor(double factor, String zoomLabel) {
 		super();
-		this.factor = new Double(factor);
+		this.factor = factor;
 		this.zoomLabel = zoomLabel;
 	}
 
