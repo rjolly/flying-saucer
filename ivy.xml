@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ivy-module version="2.0" xmlns:e="http://ant.apache.org/ivy/extra">
-    <info module="flying-saucer" organisation="com.github.rjolly" revision="9.1.25"/>
+    <info module="flying-saucer" organisation="com.github.rjolly" revision="9.1.26"/>
     <configurations>
         <conf name="default" extends="runtime,master"/>
         <conf name="master"/>
@@ -21,14 +21,13 @@
     <dependencies>
         <dependency org="net.java.linoleum" name="application" rev="1.6" conf="compile->master;runtime->default"/>
         <dependency org="org.xhtmlrenderer" name="flying-saucer-core" rev="9.1.22" conf="compile->master;runtime->default"/>
-        <dependency org="org.xhtmlrenderer" name="flying-saucer-pdf" rev="9.1.22" conf="compile->master;runtime->default"/>
+        <dependency org="org.xhtmlrenderer" name="flying-saucer-pdf" rev="9.1.22" conf="compile->master;runtime->default">
+            <exclude org="org.bouncycastle" module="bcmail-jdk14" name="*" type="*" ext="*" conf="" matcher="exact"/>
+            <exclude org="org.bouncycastle" module="bcprov-jdk14" name="*" type="*" ext="*" conf="" matcher="exact"/>
+            <exclude org="org.bouncycastle" module="bctsp-jdk14" name="*" type="*" ext="*" conf="" matcher="exact"/>
+        </dependency>
         <dependency org="de.rototor.jeuclid" name="jeuclid-core" rev="3.1.14" conf="compile->master;runtime->default"/>
         <dependency org="org.apache.xmlgraphics" name="batik-codec" rev="1.17" conf="compile->master;runtime->default"/>
-        <dependency org="com.lowagie" name="itext" rev="2.1.7" conf="compile->master;runtime->default">
-            <exclude org="bouncycastle" module="bcmail-jdk14" name="*" type="*" ext="*" conf="" matcher="exact"/>
-            <exclude org="bouncycastle" module="bcprov-jdk14" name="*" type="*" ext="*" conf="" matcher="exact"/>
-            <exclude org="bouncycastle" module="bctsp-jdk14" name="*" type="*" ext="*" conf="" matcher="exact"/>
-        </dependency>
         <dependency org="org.jsoup" name="jsoup" rev="1.15.3" conf="compile->master;runtime->default"/>
     </dependencies>
 </ivy-module>

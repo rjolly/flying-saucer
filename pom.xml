@@ -6,7 +6,7 @@
   <groupId>com.github.rjolly</groupId>
   <artifactId>flying-saucer</artifactId>
   <packaging>jar</packaging>
-  <version>9.1.25</version>
+  <version>9.1.26</version>
   <url>http://github.com/flyingsaucerproject/flyingsaucer/</url>
   <description>XML/XHTML+MathML+SVG and CSS 2.1 browser in pure Java.</description>
   <licenses>
@@ -55,6 +55,20 @@
       <groupId>org.xhtmlrenderer</groupId>
       <artifactId>flying-saucer-pdf</artifactId>
       <version>9.1.22</version>
+      <exclusions>
+        <exclusion>
+          <groupId>org.bouncycastle</groupId>
+          <artifactId>bcmail-jdk14</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.bouncycastle</groupId>
+          <artifactId>bcprov-jdk14</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.bouncycastle</groupId>
+          <artifactId>bctsp-jdk14</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>de.rototor.jeuclid</groupId>
@@ -65,25 +79,6 @@
       <groupId>org.apache.xmlgraphics</groupId>
       <artifactId>batik-codec</artifactId>
       <version>1.17</version>
-    </dependency>
-    <dependency>
-      <groupId>com.lowagie</groupId>
-      <artifactId>itext</artifactId>
-      <version>2.1.7</version>
-      <exclusions>
-        <exclusion>
-          <groupId>bouncycastle</groupId>
-          <artifactId>bcmail-jdk14</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>bouncycastle</groupId>
-          <artifactId>bcprov-jdk14</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>bouncycastle</groupId>
-          <artifactId>bctsp-jdk14</artifactId>
-        </exclusion>
-      </exclusions>
     </dependency>
     <dependency>
       <groupId>org.jsoup</groupId>
