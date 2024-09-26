@@ -28,6 +28,6 @@
         </dependency>
         <dependency org="de.rototor.jeuclid" name="jeuclid-core" rev="3.1.14" conf="compile->master;runtime->default"/>
         <dependency org="org.apache.xmlgraphics" name="batik-codec" rev="1.17" conf="compile->master;runtime->default"/>
-        <dependency org="org.jsoup" name="jsoup" rev="1.15.3" conf="compile->master;runtime->default"/>
+        <dependency org="org.jsoup" name="jsoup" rev="1.17.2" conf="compile->master;runtime->default"/>
     </dependencies>
 </ivy-module>
